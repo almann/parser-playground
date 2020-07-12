@@ -1,6 +1,9 @@
 # Avoid putting big blobs into the repo...
 /bench-data
 
+# Docker build directory
+/docker-build
+
 
 # Created by https://www.toptal.com/developers/gitignore/api/cmake,c,c++,clion
 # Edit at https://www.toptal.com/developers/gitignore?templates=cmake,c,c++,clion

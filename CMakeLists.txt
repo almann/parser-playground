@@ -3,4 +3,6 @@ project(parser_playground)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(parser_playground main.cpp)
+find_package(ZLIB)
+
+add_executable(parser_playground src/main.cpp)
