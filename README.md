@@ -6,7 +6,8 @@ A simple package to play around with parser techniques.
 
 This project uses [`conan`][conan] to manage dependencies.  Some tips:
 
-* [`pyenv`][pyenv]/[`pyenv-virtualenv`][pyenv-virtualenv] is nice to isolate the conan installation on Linux.
+* [`pyenv`][pyenv]/[`pyenv-virtualenv`][pyenv-virtualenv] is nice to isolate the
+  conan installation on Linux.
   * `pyenv virtualenv conan && pyenv activate conan && pip install -U conan`
   * In the project directory you can use `pyenv local conan` to automatically activate conan.
 * Make sure the [GCC C++ ABI settings][conan-gcc-abi] for Conan is set to the latest.
@@ -27,6 +28,11 @@ $ (mkdir -p build && \
     cmake .. -DCMAKE_BUILD_TYPE=Release && \
     cmake --build . -- -j$(nproc))
 ```
+
+On Windows, make sure `cmake` and `conan` are in your `PATH`.  The Windows
+installer for `conan` does this automatically, `cmake` might require adding it
+to your `PATH` environment variable.  A Visual Studio tool install should be
+detected automatically from these tools.
 
 ### CLion
 
