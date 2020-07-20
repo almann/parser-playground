@@ -36,8 +36,8 @@ detected automatically from these tools.
 
 ### CLion
 
-CLion has a handy [plugin][clion-conan] for integrating with `conan`.  You do have to map `conan` profiles to
-CLion's CMake profiles.
+CLion has a handy [plugin][clion-conan] for integrating with `conan`.  You do
+have to map `conan` profiles to CLion's CMake profiles.
 
 For simple integration you can add the following profiles to `$HOME/.conan/profiles`
 
@@ -66,7 +66,23 @@ $ conan install . -s build_type=Debug --install-folder=cmake-build-debug
 $ conan install . -s build_type=Release --install-folder=cmake-build-release
 ```
 
-Note, however, that you need to run the above anytime you clean the CLion workspace.
+Note, however, that you need to run the above anytime you clean the CLion
+workspace.
+
+### Visual Studio
+
+Visual Studio 2019 has CMake support, but its Conan plugin does not seem to work with
+CMake.  Thus the manual conan injection works:
+
+```
+> conan install . -s build_type=Debug -if=out\build\x64-Debug
+> conan install . -s build_type=Release -if=out\build\x64-Release
+```
+
+Note that the directory paths will be dependent on your VS studio configuration.
+
+See also this [VS 2017 Conan How-to][conan-vs].  There are instructions to run
+the above command as a hook
 
 ## Docker
 
@@ -91,4 +107,5 @@ $ docker run --interactive --tty --rm \
 [clion-conan]: https://blog.jetbrains.com/clion/2019/05/getting-started-with-the-conan-clion-plugin/
 [pyenv]: https://github.com/pyenv/pyenv
 [pyenv-virtualenv]: https://github.com/pyenv/pyenv-virtualenv
+[conan-vs]: https://docs.conan.io/en/latest/howtos/vs2017_cmake.html
 [simdjson-docker]: https://github.com/simdjson/simdjson/blob/master/Dockerfile
