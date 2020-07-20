@@ -1,9 +1,12 @@
 # Avoid putting big blobs into the repo...
 /bench-data
 
-# Docker build directory
+# Build directories
 /docker-build
+/build
 
+# Avoid pyenv local version
+/.python-version
 
 # Created by https://www.toptal.com/developers/gitignore/api/cmake,c,c++,clion
 # Edit at https://www.toptal.com/developers/gitignore?templates=cmake,c,c++,clion
