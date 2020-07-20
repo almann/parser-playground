@@ -21,7 +21,11 @@ This project uses [`conan`][conan] to manage dependencies.  Some tips:
 Building the project can be done by:
 
 ```bash 
-$ (mkdir -p build && cd build && conan install .. && cmake .. -G "Ninja" -DCMAKE_BUILD_TYPE=Release && cmake --build .)
+$ (mkdir -p build && \
+    cd build && \
+    conan install .. && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release && \
+    cmake --build . -- -j$(nproc))
 ```
 
 ### CLion
@@ -47,6 +51,16 @@ include(default)
 [settings]
 build_type=Release
 ```
+
+Alternatively, you **do not** need to install the above plugin.
+You can run the following (depending on your CMake profiles):
+
+```bash
+$ conan install . -s build_type=Debug --install-folder=cmake-build-debug
+$ conan install . -s build_type=Release --install-folder=cmake-build-release
+```
+
+Note, however, that you need to run the above anytime you clean the CLion workspace.
 
 ## Docker
 
