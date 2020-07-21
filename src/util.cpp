@@ -4,7 +4,7 @@
 #include <random>
 
 // Scratch pad type for encoding VarUInt.
-typedef std::array<uint8_t, 9> varuint_scratch;
+typedef std::array<uint8_t, 10> varuint_scratch;
 
 size_t encode_varuint(buffer &dest, uint64_t value)
 {
