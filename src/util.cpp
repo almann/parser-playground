@@ -14,16 +14,16 @@ size_t encode_varuint(buffer &dest, uint64_t value)
     // write the varuint in big-endian order
     for (auto cur = scratch.rbegin(); cur != scratch.rend(); cur++)
     {
-        *cur = value & 0x7F;
-        value >>= 7;
+        *cur = value & 0x7FU;
+        value >>= 7U;
         size += 1;
-        if (value == 0)
+        if (value == 0U)
         {
             break;
         }
     }
     // tag the least significant bit with the end-marker
-    *scratch.rbegin() |= 0x80;
+    *scratch.rbegin() |= 0x80U;
 
     // get the starting position of the serialized value
     auto start = scratch.cbegin() + (scratch.size() - size);
