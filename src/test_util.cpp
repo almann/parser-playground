@@ -2,6 +2,7 @@
 
 #include <array>
 #include <tuple>
+#include <string>
 
 #include "util.h"
 
@@ -19,8 +20,9 @@ TEST_CASE("Encode VarUInts", "[varuint]")
             make_tuple(130, buffer{0x01, 0x82})
     );
 
-    auto size = encode_varuint(buf, value);
-    REQUIRE(expected.size() == size);
-    REQUIRE(expected == buf);
+    SECTION(std::to_string(value)) {
+        auto size = encode_varuint(buf, value);
+        REQUIRE(expected.size() == size);
+        REQUIRE(expected == buf);
+    }
 }
-
