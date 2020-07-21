@@ -1,8 +1,2 @@
-#include <iostream>
-
-#include <zlib.h>
-
-int main(int const argc, char const **argv) {
-    // TODO!
-    return 0;
-}
+#define CATCH_CONFIG_MAIN
+#include <catch2/catch.hpp>
