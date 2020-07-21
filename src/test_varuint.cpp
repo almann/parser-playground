@@ -3,6 +3,7 @@
 #include <array>
 #include <tuple>
 #include <string>
+#include <algorithm>
 
 #include "varuint.h"
 
@@ -10,7 +11,7 @@ using std::make_tuple;
 
 typedef std::vector<std::tuple<uint64_t, buffer>> encode_cases;
 
-TEST_CASE("Encode VarUInts", "[varuint]")
+TEST_CASE("Encode/Decode VarUInts", "[varuint]")
 {
     buffer buf;
 
@@ -29,6 +30,40 @@ TEST_CASE("Encode VarUInts", "[varuint]")
         auto size = encode_varuint(buf, value);
         REQUIRE(expected.size() == size);
         REQUIRE(expected == buf);
+
+        auto [ok, expected_value, read_len] = simple_varuint_parse(buf.data(), buf.size());
+        // 8-byte decode limitation
+        if (value < 72057594037927936ULL)
+        {
+            REQUIRE(ok);
+            REQUIRE(buf.size() == read_len);
+            REQUIRE(value == expected_value);
+        }
+        else
+        {
+            REQUIRE(!ok);
+            REQUIRE(8 == read_len);
+        }
+    }
+}
+
+TEST_CASE("Error Case VarUInt Parsing", "[varuint]")
+{
+    buffer buf;
+
+    SECTION("Empty")
+    {
+        auto [ok, expected_value, read_len] = simple_varuint_parse(buf.data(), buf.size());
+        REQUIRE(!ok);
+        REQUIRE(0ULL == expected_value);
+        REQUIRE(0U == read_len);
+    }
+
+    SECTION("End")
+    {
+        auto [ok, expected_value, read_len] = simple_varuint_parse(buf.data(), buf.size());
+        REQUIRE(0ULL == expected_value);
+        REQUIRE(0U == read_len);
     }
 }
 
@@ -37,7 +72,7 @@ TEST_CASE("Random VarUInts", "[varuint]")
     // stable seed for deterministic results between test runs
     constexpr auto seed = 0x8BE54DD4F826ACD9ULL;
 
-    constexpr size_t count = 1000000U;
+    constexpr size_t count = 5000000U;
 
     SECTION("Size 1 Generation")
     {
@@ -45,10 +80,7 @@ TEST_CASE("Random VarUInts", "[varuint]")
 
         CAPTURE(buf);
         REQUIRE(buf.size() == count);
-        for (auto octet : buf)
-        {
-            REQUIRE((octet & 0x80U) != 0U);
-        }
+        REQUIRE(std::all_of(buf.cbegin(), buf.cend(), [&](auto octet) { return (octet & 0x80U) != 0U; }));
     }
 
     SECTION("Size 8 Generation")
@@ -60,16 +92,19 @@ TEST_CASE("Random VarUInts", "[varuint]")
 
         size_t actual_count = 0U;
         size_t bytes_seen = 0U;
+        size_t max_bytes_per_int = 0;
         for (auto octet : buf)
         {
             bytes_seen++;
             if ((octet & 0x80U) != 0U)
             {
-                REQUIRE(bytes_seen <= 8U);
+                max_bytes_per_int = std::max(max_bytes_per_int, bytes_seen);
                 actual_count++;
                 bytes_seen = 0U;
             }
         }
+
+        REQUIRE(max_bytes_per_int == 8);
         REQUIRE(count == actual_count);
     }
 }
