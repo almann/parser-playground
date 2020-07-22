@@ -104,6 +104,10 @@ $ docker run --interactive --tty --rm \
   parser_playground
 ```
 
+## Additional References
+
+* [SIMD Notes][simd-notes] - some of my notes around SIMD algorithms.
+
 [conan]: https://docs.conan.io/en/latest/
 [conan-gcc-abi]: https://docs.conan.io/en/latest/howtos/manage_gcc_abi.html
 [clion-conan]: https://blog.jetbrains.com/clion/2019/05/getting-started-with-the-conan-clion-plugin/
@@ -111,3 +115,4 @@ $ docker run --interactive --tty --rm \
 [pyenv-virtualenv]: https://github.com/pyenv/pyenv-virtualenv
 [conan-vs]: https://docs.conan.io/en/latest/howtos/vs2017_cmake.html
 [simdjson-docker]: https://github.com/simdjson/simdjson/blob/master/Dockerfile
+[simd-notes]: SIMD-NOTES.md
