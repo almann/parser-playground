@@ -1,6 +1,5 @@
 #include <catch2/catch.hpp>
 
-#include <array>
 #include <tuple>
 #include <string>
 #include <algorithm>
@@ -8,6 +7,7 @@
 #include "varuint.h"
 
 using std::make_tuple;
+using parse_func = std::function<varuint_result(uint8_t *, size_t)>;
 
 typedef std::vector<std::tuple<uint64_t, buffer>> encode_cases;
 
@@ -25,13 +25,18 @@ TEST_CASE("Encode/Decode VarUInts", "[varuint]")
             make_tuple(12784104213654456832ULL, buffer{0x01, 0x31, 0x35, 0x10, 0x61, 0x49, 0x53, 0x4b, 0x14, 0x80})
     );
 
-    SECTION(std::to_string(value))
+    auto [parse_name, parse] = GENERATE(
+            make_tuple("simple", simple_varuint_parse),
+            make_tuple("pext", pext_varuint_parse)
+    );
+
+    SECTION(std::to_string(value) + " - " + parse_name)
     {
         auto size = encode_varuint(buf, value);
         REQUIRE(expected.size() == size);
         REQUIRE(expected == buf);
 
-        auto [ok, expected_value, read_len] = simple_varuint_parse(buf.data(), buf.size());
+        auto [ok, expected_value, read_len] = parse(buf.data(), buf.size());
         // 8-byte decode limitation
         if (value < 72057594037927936ULL)
         {
@@ -42,7 +47,6 @@ TEST_CASE("Encode/Decode VarUInts", "[varuint]")
         else
         {
             REQUIRE(!ok);
-            REQUIRE(8 == read_len);
         }
     }
 }

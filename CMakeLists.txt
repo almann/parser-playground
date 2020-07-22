@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(parser_playground)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "-march=haswell")
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
