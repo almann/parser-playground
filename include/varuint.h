@@ -20,7 +20,7 @@ using varuint_result = std::tuple<bool, uint64_t, size_t>;
 // Simple VarUInt parser.  Returns the length parsed.
 // This is not generic to make sure that we're operating on raw pointers.
 // Limitation is 2**56 - 1 (8-byte VarUInt8)
-inline varuint_result simple_varuint_parse(uint8_t *buf, size_t len) noexcept
+inline varuint_result simple_varuint_parse(uint8_t const *buf, size_t len) noexcept
 {
     bool found_end = false;
     size_t read_len = 0U;
@@ -51,24 +51,28 @@ inline varuint_result simple_varuint_parse(uint8_t *buf, size_t len) noexcept
 // NB: not portable--requires x86-64 (BMI 1/2), specifically LZCNT/PEXT, also uses __builtin_bswap to get MOVBE
 // https://www.felixcloutier.com/x86/lzcnt
 // https://www.felixcloutier.com/x86/pext
-inline varuint_result pext_varuint_parse(uint8_t *buf, size_t len) noexcept
+inline varuint_result pext_varuint_parse(uint8_t const *buf, size_t len) noexcept
 {
     bool found_end = false;
-    size_t read_len = 0UL;
-    uint64_t value = 0ULL;
-    uint64_t raw = 0ULL;
+    size_t read_len = 0U;
+    uint64_t value = 0U;
+    uint64_t raw = 0U;
 
     constexpr uint64_t k_high_mask = 0x8080808080808080ULL;
     constexpr uint64_t k_content_mask =  0x7F7F7F7F7F7F7F7FULL;
 
+    // defer to simple parse if we're close to end of buffer
+    if (len < 8U)
+    {
+        return simple_varuint_parse(buf, len);
+    }
+
     // unaligned load and byte swap to get endian right
-    size_t raw_len = std::min(8UL, len);
-    memcpy(&raw, buf, raw_len);
-    raw = __builtin_bswap64(raw);
+    raw = __builtin_bswap64(*reinterpret_cast<uint64_t const *>(buf));
 
     uint64_t high_bits = raw & k_high_mask;
 
-    // overflow and premature end of buffer case is no set bits
+    // overflow case is no set bits
     if (high_bits != 0)
     {
         // count the leading zero bits to find the first set bit (of only the high bits), and then
