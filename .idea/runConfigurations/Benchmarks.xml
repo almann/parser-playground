@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Benchmarks" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="[!benchmark]" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="parser_playground" TARGET_NAME="parser_playground" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="parser_playground" RUN_TARGET_NAME="parser_playground">
+    <method v="2">
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>
