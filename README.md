@@ -1,6 +1,8 @@
 # Parser Playground
 
-A simple package to play around with parser techniques.
+A simple package to play around with parser techniques, especially around SIMD and
+other platform specific intrinsics.  Also a place to experiment with decoding techniques
+using labels as values (i.e. computed goto).
 
 ## Development
 
