@@ -3,6 +3,7 @@
 #include <tuple>
 #include <string>
 #include <algorithm>
+#include <functional>
 
 #include "varuint.h"
 
@@ -30,7 +31,7 @@ TEST_CASE("Encode/Decode VarUInts", "[varuint]")
             make_tuple("pext", pext_varuint_parse)
     );
 
-    SECTION(std::to_string(value) + " - " + parse_name)
+    SECTION(std::to_string(value) + " " + parse_name)
     {
         auto size = encode_varuint(buf, value);
         REQUIRE(expected.size() == size);
@@ -55,17 +56,22 @@ TEST_CASE("Error Case VarUInt Parsing", "[varuint]")
 {
     buffer buf;
 
-    SECTION("Empty")
+    auto [parse_name, parse] = GENERATE(
+            make_tuple("simple", simple_varuint_parse),
+            make_tuple("pext", pext_varuint_parse)
+    );
+
+    SECTION("Empty " + std::string(parse_name))
     {
-        auto [ok, expected_value, read_len] = simple_varuint_parse(buf.data(), buf.size());
+        auto [ok, expected_value, read_len] = parse(buf.data(), buf.size());
         REQUIRE(!ok);
         REQUIRE(0ULL == expected_value);
         REQUIRE(0U == read_len);
     }
 
-    SECTION("End")
+    SECTION("End " + std::string(parse_name))
     {
-        auto [ok, expected_value, read_len] = simple_varuint_parse(buf.data(), buf.size());
+        auto [ok, expected_value, read_len] = parse(buf.data(), buf.size());
         REQUIRE(0ULL == expected_value);
         REQUIRE(0U == read_len);
     }
@@ -75,7 +81,7 @@ TEST_CASE("Random VarUInts", "[varuint]")
 {
     // stable seed for deterministic results between test runs
     constexpr auto seed = 0x8BE54DD4F826ACD9ULL;
-
+    // number of elements to test
     constexpr size_t count = 5000000U;
 
     SECTION("Size 1 Generation")
