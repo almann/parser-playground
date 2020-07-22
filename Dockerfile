@@ -31,4 +31,5 @@ CMD rm -fr docker-build && \
     cd docker-build && \
     conan install .. && \
     cmake -G Ninja -DCMAKE_BUILD_TYPE=Release .. && \
-    cmake --build .
+    cmake --build . && \
+    ./bin/parser_playground
