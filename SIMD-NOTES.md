@@ -11,6 +11,7 @@ UTF-8:
 * [UTF-8 Processing Using SIMD][utf8-simd]
 * [Vectorized UTF-8 Conversion using `stdx::simd`][utf8-stdx-simd]
 * [SIMD Text Processing with Parallel Bit Streams][simd-u8u16]
+* [utf8lut: Vectorized UTF-8 converter. Introduction][utf8-lut]
 
 Base-64:
 * [SSE Base64 Encoding][sse-base64] (discusses the use of `PSHUFB` for table lookups)
@@ -39,6 +40,7 @@ Misc:
 [utf8-simd]: https://woboq.com/blog/utf-8-processing-using-simd.html
 [utf8-stdx-simd]: https://mattkretz.github.io/2019/05/27/vectorized-conversion-from-utf8-using-stdx-simd.html
 [simd-u8u16]: https://www2.cs.sfu.ca/~cameron/ppopp074-cameron.pdf
+[utf8-lut]: https://dirtyhandscoding.github.io/posts/utf8lut-vectorized-utf-8-converter-introduction.html
 [avx-base64]: https://github.com/lemire/fastbase64
 [sse-base64]: http://0x80.pl/notesen/2016-01-12-sse-base64-encoding.html
 [avx512-base64]: http://0x80.pl/notesen/2016-04-03-avx512-base64.html
