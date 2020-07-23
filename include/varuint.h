@@ -5,7 +5,11 @@
 #include <algorithm>
 #include <cstring>
 
+#ifdef _MSC_VER
+#include <immintrin.h>
+#else
 #include <x86intrin.h>
+#endif
 
 #include "types.h"
 
@@ -68,7 +72,11 @@ inline varuint_result pext_varuint_parse(uint8_t const *buf, size_t len) noexcep
     }
 
     // unaligned load and byte swap to get endian right
-    raw = __builtin_bswap64(*reinterpret_cast<uint64_t const *>(buf));
+#ifdef _MSC_VER
+    raw = _loadbe_i64(buf);
+#else
+    raw = __builtin_bswap64(*reinterpret_cast<uint64_t const*>(buf));
+#endif
 
     uint64_t high_bits = raw & k_high_mask;
 
@@ -77,7 +85,7 @@ inline varuint_result pext_varuint_parse(uint8_t const *buf, size_t len) noexcep
     {
         // count the leading zero bits to find the first set bit (of only the high bits), and then
         // add in the whole octet width--this is how many of the most significant bits are the VarUInt
-        uint bit_len = _lzcnt_u64(high_bits) + 8U;
+        uint64_t bit_len = _lzcnt_u64(high_bits) + 8U;
 
         // extract the content bits we care about (note that we zeroed out anything we don't care about first)
         value = _pext_u64((raw >> (64 - bit_len)), k_content_mask);
