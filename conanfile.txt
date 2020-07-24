@@ -1,5 +1,4 @@
 [requires]
-zlib/1.2.11
 catch2/2.13.0
 
 [generators]

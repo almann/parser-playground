@@ -4,6 +4,7 @@
 # Build directories
 /docker-build
 /build
+/out
 
 # Avoid pyenv local version
 /.python-version
