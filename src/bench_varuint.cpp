@@ -7,6 +7,22 @@
 
 using std::make_tuple;
 
+template<typename Func>
+inline size_t parse_all(buffer &buf, Func parse)
+{
+    uint8_t *curr = buf.data();
+    size_t rem = buf.size();
+    size_t count = 0;
+    while (rem > 0)
+    {
+        auto [ok, value, read_len] = parse(curr, rem);
+        rem -= read_len;
+        curr += read_len;
+        count++;
+    }
+    return count;
+}
+
 TEST_CASE("Benchmark VarUInt Parsing", "[!benchmark][varuint]")
 {
     // stable seed for deterministic results between benchmark runs
@@ -24,25 +40,11 @@ TEST_CASE("Benchmark VarUInt Parsing", "[!benchmark][varuint]")
 
     BENCHMARK("Simple " + std::string(size_name) + std::to_string(count))
     {
-        uint8_t *curr = buf.data();
-        size_t rem = buf.size();
-        while (rem > 0)
-        {
-            auto [ok, value, read_len] = simple_varuint_parse(curr, rem);
-            rem -= read_len;
-            curr += read_len;
-        }
+        return parse_all(buf, simple_varuint_parse);
     };
 
     BENCHMARK("PEXT " + std::string(size_name) + std::to_string(count))
     {
-        uint8_t *curr = buf.data();
-        size_t rem = buf.size();
-        while (rem > 0)
-        {
-            auto [ok, value, read_len] = pext_varuint_parse(curr, rem);
-            rem -= read_len;
-            curr += read_len;
-        }
+        return parse_all(buf, pext_varuint_parse);
     };
 }
