@@ -12,9 +12,14 @@ endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCATCH_CONFIG_ENABLE_BENCHMARKING")
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_executable(parser_playground src/main.cpp src/varuint.cpp src/test_varuint.cpp src/bench_varuint.cpp )
-target_include_directories(parser_playground PRIVATE include)
-target_link_libraries(parser_playground ${CONAN_LIBS})
+add_executable(
+    parser_playground
+    src/main.cpp src/varuint.cpp src/test_varuint.cpp src/bench_varuint.cpp)
+
+target_include_directories(
+    parser_playground
+    PRIVATE include deps/catch2/single_include)
