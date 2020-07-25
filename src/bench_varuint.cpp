@@ -32,18 +32,18 @@ inline varuint_result parse_all(buffer &buf) {
 TEST_CASE("Benchmark VarUInt Parsing", "[!benchmark][varuint]") {
     // stable seed for deterministic results between benchmark runs
     constexpr auto seed = 0x2507A7AC9E29907BULL;
-    constexpr size_t count = 100000U;
+    constexpr size_t count = 1000000U;
 
-    constexpr auto sizes = std::array{
+    constexpr auto maximums = std::array{
         make_tuple("2 Byte ", 16383ULL),
         make_tuple("3 Byte ", 2097151ULL),
         make_tuple("4 Byte ", 268435455ULL),
         make_tuple("8 Byte ", 72057594037927935ULL)
     };
 
-    buffer buf = random_varuints(seed, 2097151ULL, count);
+    for (auto[size_name, maximum] : maximums) {
+        buffer buf = random_varuints(seed, maximum, count);
 
-    for (auto[size_name, size] : sizes) {
         BENCHMARK("Simple " + std::string(size_name) + std::to_string(count)) {
             return parse_all<simple_varuint_parse>(buf);
         };
