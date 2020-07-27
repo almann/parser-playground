@@ -8,9 +8,6 @@
 #include "varuint.h"
 
 using std::make_tuple;
-using parse_func = std::function<varuint_result(uint8_t *, size_t)>;
-
-typedef std::vector<std::tuple<uint64_t, buffer>> encode_cases;
 
 TEST_CASE("Encode/Decode VarUInts", "[varuint]") {
     buffer buf;
