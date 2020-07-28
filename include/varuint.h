@@ -67,7 +67,7 @@ inline varuint_result pext_varuint_parse(uint8_t const *buf, size_t len) noexcep
     }
 
     // unaligned load and byte swap to get endian right
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
     raw = _loadbe_i64(buf);
 #else
     raw = __builtin_bswap64(*reinterpret_cast<uint64_t const *>(buf));
